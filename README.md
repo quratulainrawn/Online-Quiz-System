@@ -1,59 +1,77 @@
 # Online-Quiz-System
 Online Quiz System (using TCP Multithreading to cater unlimited clients at the same time) 
 
-ONLINE QUIZ SYSTEM
-Online Quiz System (using TCP Multithreading to cater unlimited clients at the same time)
-which contains three types of tests
- Science.
- Mathematics.
- English.
-Every test type further contains different areas as following
- Science  ( Physics, Chemistry, Biology )
- Mathematics  ( Geometry, Algebra, IQ )
- English  (Analogies, Antonyms, RC Questions )
-Details:
-There will be a main server and three sub-servers (for three different tests). The main server
-does not want to overburden itself by communicating with all the incoming clients and handle
-the tests, so it only stores the info about which sub-server contains what sort of test (Three subservers each of which contains one type of test i.e., Science, Math or English). When a sub-server
-connects to the main server it sends the main server a string containing the Test Name which it
-can carry out along with its IP and Port number (e.g. Mathematics, Sub-server IP, Sub-server
-Port). Whenever a client connects to the main server, it will display three kinds of tests (Science,
-Mathematics and English) to the client. The client will then choose the type of test (e.g., Math).
-The main server will then send the information of corresponding sub-server to the client. The
-client will then connect to the corresponding sub-server. The sub-server will then show different
-types of the corresponding test (e.g, Geometry, Algebra and IQ for Math Sub-server) to the
-client. The client will select the test type and complete the test (You don’t need any test. Just
-make the sub-server to assign random marks to the client from 1 to 100). Then sub-server will
-send the information related to client (Client IP, Client Port, Test Name, Test Type, Marks) back
-to main server and also to the client. The client will then terminate. The main server will store
-the information within a file for all the clients.
-Client A
-Sub Server 1 (Science)
-Main Server
-Sub Server 2 (Math)
-Sub Server 3 (English)
-1. Design a Main Server.
-2. Design a Client.
-3. Design 3 TCP Sub-servers.
-The string a sub-server send to the main server will have the following format:
-Test_name, Sub-server IP, Sub-server Port
-4. Each sub-server will connect to main server. Main server will make a database about the
-sub-server information it gets from the sub-servers.
-5. When client connects with main server and makes a request to give a specific test (e.g.,
-Math), main server will search the record in the database it has for the corresponding subserver and will send sub-server information to the client. The string a main server will send to
-the client will have the following format:
-Test_name, Sub-server IP, Sub-server Port
+### Overview:
+The Online Quiz System is designed to provide a scalable and efficient solution for conducting online tests across multiple subjects using TCP multithreading. The system consists of a main server, three sub-servers (each dedicated to a specific subject: Science, Mathematics, and English), and multiple clients. The main server handles client requests by directing them to the appropriate sub-server, which conducts the tests and returns the results. This architecture ensures that the main server is not overburdened by direct communication with clients, enhancing overall system performance and scalability.
 
-6. Using that information the client will reconnect to the sub server using TCP connection
-(Note: more than one clients can be connected to any particular sub server at a single
-time). The sub-server will then show different test-types to client. Client will select one
-and sub-server will assign random marks to client on that test type in the range of 1 to
-100.
-7. The sub server will send the final result to the client and also to the main server for the
-record of that client. The format of the information will be as follows:
-Client IP, Client Port, Test Name, Test Type, Marks
-8. The client will show the result on the terminal and then quit. The main server will store
-the information in a file with the below mentioned format and keep listening for next
-clients.
-Client IP, Client Port, Test Name, Test Type, Marks
+### Test Categories and Subcategories:
+1. **Science**
+   - Physics
+   - Chemistry
+   - Biology
+
+2. **Mathematics**
+   - Geometry
+   - Algebra
+   - IQ
+
+3. **English**
+   - Analogies
+   - Antonyms
+   - Reading Comprehension (RC) Questions
+
+### System Components and Workflow:
+
+#### 1. Main Server
+- **Functionality:** 
+  - Receives connections from clients and directs them to the appropriate sub-server based on the test type requested.
+  - Maintains a database of sub-server information (test type, IP address, and port number).
+  - Stores client test results received from sub-servers in a file.
+- **Communication Protocol:**
+  - Receives sub-server details in the format: `Test_name, Sub-server IP, Sub-server Port`
+  - Sends sub-server information to clients in the format: `Test_name, Sub-server IP, Sub-server Port`
+  - Receives client results in the format: `Client IP, Client Port, Test Name, Test Type, Marks`
+
+#### 2. Sub-Servers (Science, Mathematics, English)
+- **Functionality:**
+  - Connect to the main server and provide their details.
+  - Handle client connections, present available test types, assign random marks, and send results back to the main server and clients.
+- **Communication Protocol:**
+  - Send initial connection details to the main server in the format: `Test_name, Sub-server IP, Sub-server Port`
+  - Receive client requests for specific test types and assign random marks.
+  - Send results back to the main server and clients in the format: `Client IP, Client Port, Test Name, Test Type, Marks`
+
+#### 3. Client
+- **Functionality:**
+  - Connect to the main server and request a specific test type.
+  - Receive sub-server details from the main server and establish a connection with the relevant sub-server.
+  - Select a test type from the options provided by the sub-server, complete the test, and receive marks.
+  - Display test results and terminate the connection.
+- **Communication Protocol:**
+  - Receive sub-server information from the main server in the format: `Test_name, Sub-server IP, Sub-server Port`
+  - Receive test results from the sub-server in the format: `Client IP, Client Port, Test Name, Test Type, Marks`
+
+### Implementation Details:
+
+#### Main Server:
+1. **Initialize the main server:** Set up TCP connection to listen for sub-server and client connections.
+2. **Handle sub-server registration:** Receive and store sub-server details.
+3. **Handle client requests:** Display test options, receive client choice, retrieve corresponding sub-server details, and send them to the client.
+4. **Store client results:** Receive and log test results in a file.
+
+#### Sub-Servers:
+1. **Initialize the sub-server:** Set up TCP connection and register with the main server.
+2. **Handle client connections:** Present test type options, assign random marks, and send results to the main server and clients.
+3. **Random marks assignment:** Use a random number generator to assign marks between 1 and 100.
+
+#### Client:
+1. **Connect to the main server:** Request a specific test type.
+2. **Receive sub-server details:** Establish connection with the appropriate sub-server.
+3. **Select and complete the test:** Choose a test type and receive marks.
+4. **Display results:** Show the results on the terminal and terminate the connection.
+
+### Conclusion:
+The Online Quiz System project demonstrates the use of TCP multithreading to manage multiple clients efficiently while distributing the workload across multiple sub-servers. By implementing this system, the project showcases skills in network programming, server-client communication, and multithreading. The architecture ensures scalability, responsiveness, and effective resource management, making it suitable for large-scale deployment in educational environments.
+
+
 
